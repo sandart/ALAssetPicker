@@ -133,20 +133,22 @@ class AssetGroupListViewController: UITableViewController {
          assetsLibrary = ALAssetsLibrary()
          albumsList = NSMutableArray()
         
+        weak var weakSelf = self
         assetsLibrary.enumerateGroupsWithTypes(ALAssetsGroupAll, usingBlock: { (group:ALAssetsGroup! ,stop) -> Void in
             if (group != nil) {
                 group.setAssetsFilter(ALAssetsFilter.allPhotos())
                 if group.numberOfAssets() > 0 {
                     // 把相册储存到数组中，方便后面展示相册时使用
-                    self.albumsList.addObject(group)
+                    let strongSelf = weakSelf
+                    strongSelf!.albumsList.addObject(group)
                 }
             }
             else{
                 if self.albumsList.count > 0 {
-                    
+                    let strongSelf = weakSelf
                     self.tableView.reloadData()
                     let  assetListVC = self.storyboard?.instantiateViewControllerWithIdentifier("AssetListViewController") as! AssetListViewController
-                          assetListVC.assetsGroup = self.albumsList[0] as! ALAssetsGroup
+                          assetListVC.assetsGroup = strongSelf!.albumsList[0] as! ALAssetsGroup
                     self.navigationController?.pushViewController(assetListVC, animated: false)
                     
                 }
