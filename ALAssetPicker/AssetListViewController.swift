@@ -194,32 +194,25 @@ class AssetListViewController: UICollectionViewController {
     
     func fetchAsset(){
 
-       let hud =  MBProgressHUD.showHUDAddedTo(view, animated: true)
-        hud.labelText = "获取图片"
-        self.imagesAssetList = NSMutableArray()
-        
-        weak var weakSelf = self
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
+           let hud =  MBProgressHUD.showHUDAddedTo(view, animated: true)
+            hud.labelText = "获取图片"
+            self.imagesAssetList = NSMutableArray()
+            weak var weakSelf = self
+
             self.assetsGroup.enumerateAssetsWithOptions(NSEnumerationOptions.Concurrent) { (result, index, stop) -> Void in
                 if result != nil {
-//                    print("result - \(result)")
-                    let asset = Asset(item: result)
-                    let strongSelf = weakSelf
-                    strongSelf!.imagesAssetList.addObject(asset)
+                        let asset = Asset(item: result)
+                        let strongSelf = weakSelf
+                        strongSelf!.imagesAssetList.addObject(asset)
                 }
                 else{
-                    // 耗时的操作
-                    dispatch_async(dispatch_get_main_queue()) { () -> Void in
                         MBProgressHUD.hideHUDForView(self.view, animated: true)
                         let strongSelf = weakSelf
                         strongSelf!.collectionView?.reloadData()
                         let indexPath = NSIndexPath(forItem: strongSelf!.imagesAssetList.count - 1, inSection: 0)
                         strongSelf!.collectionView?.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.CenteredVertically, animated: false)
                     }
-                }
             }
-        })
     }
     
     //MARK: - checkPictureByIndex
@@ -289,7 +282,7 @@ class AssetListViewController: UICollectionViewController {
     
     deinit{
         print("图片列表挂了....")
-        imagesAssetList = nil
+//        imagesAssetList = nil
     }
     // MARK: UICollectionViewDelegate
 
