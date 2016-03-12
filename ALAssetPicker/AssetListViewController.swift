@@ -197,22 +197,26 @@ class AssetListViewController: UICollectionViewController {
            let hud =  MBProgressHUD.showHUDAddedTo(view, animated: true)
             hud.labelText = "获取图片"
             self.imagesAssetList = NSMutableArray()
+        
             weak var weakSelf = self
 
-            self.assetsGroup.enumerateAssetsWithOptions(NSEnumerationOptions.Concurrent) { (result, index, stop) -> Void in
-                if result != nil {
-                        let asset = Asset(item: result)
-                        let strongSelf = weakSelf
-                        strongSelf!.imagesAssetList.addObject(asset)
-                }
-                else{
-                        MBProgressHUD.hideHUDForView(self.view, animated: true)
-                        let strongSelf = weakSelf
-                        strongSelf!.collectionView?.reloadData()
-                        let indexPath = NSIndexPath(forItem: strongSelf!.imagesAssetList.count - 1, inSection: 0)
-                        strongSelf!.collectionView?.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.CenteredVertically, animated: false)
-                    }
+        self.assetsGroup.enumerateAssetsUsingBlock { (result:ALAsset!, index:Int, stop:UnsafeMutablePointer<ObjCBool>) -> Void in
+            
+            if result != nil {
+                let asset = Asset(item: result)
+                let strongSelf = weakSelf
+                strongSelf!.imagesAssetList.addObject(asset)
             }
+            else{
+                MBProgressHUD.hideHUDForView(self.view, animated: true)
+                let strongSelf = weakSelf
+                strongSelf!.collectionView?.reloadData()
+                let indexPath = NSIndexPath(forItem: strongSelf!.imagesAssetList.count - 1, inSection: 0)
+                strongSelf!.collectionView?.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.CenteredVertically, animated: false)
+            }
+            
+            
+        }
     }
     
     //MARK: - checkPictureByIndex
